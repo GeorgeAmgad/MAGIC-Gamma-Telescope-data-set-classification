@@ -9,6 +9,21 @@ test = []
 ###############################################################
 
 
+####################### constants #############################
+length = 0
+width = 1
+size = 2
+conc = 3
+conc1 = 4
+asym = 5
+m3long = 6
+m3trans = 7
+alpha = 8
+dist = 9
+classification = 10
+##############################################################
+
+
 def read_data():
     f = open("train.txt", "r")
     while True:

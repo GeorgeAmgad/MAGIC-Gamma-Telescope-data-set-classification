@@ -1,11 +1,11 @@
 import random
 
 ################### use this for random training #####################
-training_data = []  # pure training data
+training_data = []
 ######################################################################
 
 ################### use this for random testing ######################
-testing_data = []  # testing data
+testing_data = []
 ######################################################################
 
 
@@ -37,8 +37,6 @@ while True:
     raw_data.append(reader)
     counter += 1
 
-print("total number of data =", counter)
-
 num_of_g = 0
 num_of_h = 0
 
@@ -53,10 +51,6 @@ for reading in raw_data:
         list_of_h.append(reading)
         num_of_h += 1
 
-
-print("number of Gs =", num_of_g)
-print("number of Hs =", num_of_h)
-
 random.shuffle(list_of_g)  # shuffle the list to trim randomly
 
 all_data = []  # all of the -ready to use- data
@@ -69,9 +63,6 @@ for reading in list_of_h:
 
 random.shuffle(all_data)  # shuffle the data to extract testing data randomly
 
-print("total number of filtered data =", len(all_data))
-
-
 for i in range((70 * len(all_data)) // 100):
     reading = all_data.pop()
     training_data.append(reading)
@@ -80,17 +71,18 @@ testing_data = all_data.copy()  # save the rest for testing
 
 f.close()
 
+
 ########################### uncomment this code to edit/create different testing data #################################
 
-# f = open("train.txt", "w+")
-# for reading in training_data:
+# f = open("all_data.txt", "w+")
+# for reading in all_data:
 #     f.write(
 #         reading.length + ',' + reading.width + ',' + reading.size + ',' + reading.conc + ',' + reading.conc1 + ',' +
 #         reading.asym + ',' + reading.m3long + ',' + reading.m3trans + ',' + reading.alpha + ',' + reading.dist + ',' +
 #         reading.classi + '\n')
 #
 # f.close()
-#
+
 # f = open("test.txt", "w+")
 # for reading in testing_data:
 #     f.write(
@@ -102,3 +94,42 @@ f.close()
 
 
 ######################################################################################################################
+
+def convert_to_array(readings):
+    array = []
+    for x in range(len(readings)):
+        a_line = [readings[x].length, readings[x].width, readings[x].size, readings[x].conc, readings[x].conc1,
+                  readings[x].asym, readings[x].m3long, readings[x].m3trans, readings[x].alpha, readings[x].dist,
+                  readings[x].classi]
+        array.append(a_line)
+
+    return array
+
+
+def array_of_element_n(data, n):
+    array = []
+    for values in data:
+        array.append(values[n])
+    return array
+
+
+def encode_target(df, target_column):
+    """Add column to df with integers for the target.
+
+    Args
+    ----
+    df -- pandas DataFrame.
+    target_column -- column to map to int, producing
+                     new Target column.
+
+    Returns
+    -------
+    df_mod -- modified DataFrame.
+    targets -- list of target names.
+    """
+    df_mod = df.copy()
+    targets = df_mod[target_column].unique()
+    map_to_int = {name: n for n, name in enumerate(targets)}
+    df_mod["Target"] = df_mod[target_column].replace(map_to_int)
+
+    return df_mod, targets
